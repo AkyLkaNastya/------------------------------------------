@@ -1,6 +1,7 @@
 import time
 import random
 import numpy as np
+import pandas as pd
 
 # c - вместимость
 # p - ценность объектов
@@ -129,13 +130,18 @@ def genetic_algorithm(solutions, capacity, profits, weights, probabilities):
     return solutions
 
 # ============= ПРОХОД ПО ФАЙЛАМ ===============================================================
-    
+
 start = time.time()
+
+# results_df = pd.read_csv('results.csv')
+# results_list = []
 
 files = 7
 results = [[0,[],0,[]] for _ in range(files)] # Лучшие ценность/решение и оптимальные ценность/решение
     
 for n in range(1, files+1):
+    start_file = time.time()
+
     # Читаем файлы
     capacity = read_file_to_list(f'benchmarks/P0{n}/p0{n}_c.txt')[0]
     profits = read_file_to_list(f'benchmarks/P0{n}/p0{n}_p.txt')
@@ -173,18 +179,48 @@ for n in range(1, files+1):
     results[n-1][0] = max_profit
     results[n-1][1] = best_solution
 
-end = time.time()
+    end_file = time.time()
 
-
-# ============= ВЫВОДЫ ===============================================================
-
-print(f'Время работы алгоритма: {(end-start):.6f}\n')
-
-for n in range(1, files+1):
-    print(f'==== #P0{n} ==============')
+    print(f'==== #P0{n} ============== {end_file-start_file:.6} сек')
     print(f'Лучшая ценность:      {results[n-1][0]}')
     print(f'Лучшее решение:       {results[n-1][1]}')
     print()
     print(f'Оптимальная ценность: {results[n-1][2]}')
     print(f'Оптимальное решение:  {results[n-1][3]}')
     print()
+
+    # Код для записи в DataFrame
+    # 
+    # current_time = end_file - start_file
+
+    # existing_row = results_df[results_df['benchmark'] == f'P0{n}']
+    
+    # if not existing_row.empty:
+    #     existing_index = existing_row.index[0]
+    #     existing_profit = existing_row['Best profit'].values[0]
+        
+    #     if max_profit > existing_profit:
+    #         # Обновляем только если новый результат лучше
+    #         results_df.at[existing_index, 'Best profit'] = max_profit
+    #         results_df.at[existing_index, 'Best solution'] = str(best_solution)
+    #         # Вычисляем среднее время
+    #         old_time = existing_row['time'].values[0]
+    #         new_time = (old_time + current_time) / 2
+    #         results_df.at[existing_index, 'time'] = round(new_time, 6)
+    # else:
+    #     new_row = {
+    #         'benchmark': f'P0{n}',
+    #         'time': round(current_time, 6),
+    #         'Best profit': max_profit,
+    #         'Best solution': str(best_solution),
+    #         'Opt profit': results[n-1][2],
+    #         'Opt solution': str(results[n-1][3])
+    #     }
+    #     results_df = pd.concat([results_df, pd.DataFrame([new_row])], ignore_index=True)
+
+end = time.time()
+
+
+# ============= ВЫВОДЫ ===============================================================
+
+print(f'Время работы алгоритма: {(end-start):.6f}\n')
