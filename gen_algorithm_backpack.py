@@ -139,7 +139,7 @@ start = time.time()
 files = 7
 results = [[0,[],0,[]] for _ in range(files)] # Лучшие ценность/решение и оптимальные ценность/решение
     
-for n in range(1, files+1):
+for n in range(7, files+1):
     start_file = time.time()
 
     # Читаем файлы
@@ -163,10 +163,10 @@ for n in range(1, files+1):
 
     max_profit, best_solution, probabilities = best_things(solutions, weights, profits, max_profit, best_solution)
 
-    # Триггер для остановки алгоритма. Если после 15 прогонов не будет результата лучше, то останавливаем цикл
+    # Триггер для остановки алгоритма. Если после 10000 прогонов не будет результата лучше, то останавливаем цикл
     count = 0
 
-    while count < 15:
+    while count < 10000:
         solutions = genetic_algorithm(solutions, capacity, profits, weights, probabilities)
         new_max_profit, best_solution, probabilities = best_things(solutions, weights, profits, max_profit, best_solution)
         
